@@ -10,7 +10,7 @@ import { Contact, ContactProps } from '@/app/components/contact'
 
 type SectionListDataProps = {
     title: string
-    data: ContactProps //Contato já está tipado
+    data: ContactProps[] //Contato já está tipado
 }
 
 export function Home(){
