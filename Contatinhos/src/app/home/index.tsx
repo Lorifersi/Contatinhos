@@ -1,5 +1,5 @@
 import { useState, useEffect, useId, useRef } from 'react'
-import { View, Alert, SectionList, Text, Touchable } from 'react-native'
+import { View, Alert, SectionList, Text } from 'react-native'
 
 import { Feather } from '@expo/vector-icons'
 import * as Contacts from 'expo-contacts'
@@ -12,6 +12,7 @@ import { Input } from '@/app/components/input'
 import { Contact, ContactProps } from '@/app/components/contact'
 import { Avatar } from '../components/avatar'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Button } from '../components/button'
 
 type SectionListDataProps = {
     title: string
@@ -63,6 +64,7 @@ async function fetchContacts() {
                     return acc
                 },[])
                 setContacts(list)
+                setContact(data[0])
             }
         } catch(error){
             console.log(error)
@@ -109,18 +111,19 @@ useEffect(() => {
                     handleComponent={() => null}
                     backgroundStyle={styles.bottomSheet}
                     >
-                    <Avatar name={contact.name} image={contact.image} variant='large' />
+                    <Avatar name={contact.name} image={contact.image} variant='large' containerStyle={styles.image}/>
                         <View style={styles.bottomSheetContent}>
                             <Text style={styles.contactName}> {contact.name}</Text>
                             {
                                 contact.phoneNumbers && (
                                     <View style={styles.phone}>
-                                    <Feather name="phone" size={18} color={theme.colors.gray_400}>
-                                    </Feather>
-                                    <Text style={styles.phoneNumber}>{contact.phoneNumbers[0].number}</Text>
+                                        <Feather name="phone" size={18} color={theme.colors.gray_400}>
+                                        </Feather>
+                                        <Text style={styles.phoneNumber}>{contact.phoneNumbers[0].number}</Text>
                                 </View>
                                 )
                             }
+                            <Button title="Fechar" onPress={handleBottomSheetClose}/>
                         </View>
                     </BottomSheet>
                 }

@@ -22,7 +22,7 @@ type Props = {
 
 export function Avatar({ image, name, variant="medium", containerStyle }: Props){
     return (
-    <View>
+    <View style={containerStyle}>
         { image? (
             <Image source={image} style={variants.size[variant]}/>
         ) : (
