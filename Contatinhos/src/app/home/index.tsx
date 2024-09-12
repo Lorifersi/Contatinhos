@@ -21,7 +21,10 @@ async function fetchContacts() {
         try {
             const { status } = await Contacts.requestPermissionsAsync()
             if (status === Contacts.PermissionStatus.GRANTED){
-                const { data } = await Contacts.getContactsAsync()
+                const { data } = await Contacts.getContactsAsync({
+                    name,
+                    sort: "firstName"
+                })
                 const list = data.map((contact) => ({
                     id: contact.id ?? useId(),
                     name: contact.name,
@@ -49,7 +52,7 @@ async function fetchContacts() {
 
 useEffect(() => {
     fetchContacts()
-},[])
+},[name])
 
     return (
         <View style={styles.container}>
@@ -61,7 +64,7 @@ useEffect(() => {
                 </Input>
             </View>
             <SectionList
-                sections={[{title: "R", data: [{id: "1", name: "Heloísa"}] }]}
+                sections={contacts}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Contact contact={item} />  
@@ -70,6 +73,8 @@ useEffect(() => {
                 renderSectionHeader = {({ section }) => 
                     (<Text style={styles.section}>{section.title}</Text>)}
                 contentContainerStyle = {styles.contentList}
+                showsVerticalScrollIndicator={false}
+                SectionSeparatorComponent={() => <View style={styles.separator}/>}
                 />
         </View>
     )
