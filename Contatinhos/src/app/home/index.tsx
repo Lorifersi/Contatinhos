@@ -1,14 +1,20 @@
-import { View, Alert } from 'react-native'
+import { View, Alert, SectionList, Text } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { styles } from './styles'
 import { Input } from '@/app/components/input'
 import { theme } from '@/theme'
 import { colors } from '@/theme/color'
 import { useState, useEffect } from 'react'
-import { Contact } from '@/app/components/contact'
 import * as Contacts from 'expo-contacts'
+import { Contact, ContactProps } from '@/app/components/contact'
+
+type SectionListDataProps = {
+    title: string
+    data: ContactProps //Contato já está tipado
+}
 
 export function Home(){
+    const [contacts, setContacts] = useState<SectionListDataProps[]>([])
     const [name, setName] = useState("")
 
 async function fetchContacts() {
@@ -37,10 +43,21 @@ useEffect(() => {
                     <Feather name='x' size={16} color={theme.colors.gray_300} onPress={() => setName("")}></Feather>
                 </Input>
             </View>
-            <Contact contact={{
-                name: "Pedroso",
-                image: require("@/assets/avatar.jpeg")
-            }} />
+            <SectionList
+                sections={[{title: "R", data: [{id: "1", name: "Heloísa"}] }]}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <Contact contact={{
+                        name: item.name,
+                        image: require("@/assets/avatar.jpeg")
+                        }} 
+                    />  
+                )}
+
+                renderSectionHeader = {({ section }) => 
+                    (<Text style={styles.section}>{section.title}</Text>)}
+                contentContainerStyle = {styles.contentList}
+                />
         </View>
     )
 }
