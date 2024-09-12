@@ -4,7 +4,7 @@ import { styles } from './styles'
 import { Input } from '@/app/components/input'
 import { theme } from '@/theme'
 import { colors } from '@/theme/color'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
 import * as Contacts from 'expo-contacts'
 import { Contact, ContactProps } from '@/app/components/contact'
 
@@ -22,7 +22,24 @@ async function fetchContacts() {
             const { status } = await Contacts.requestPermissionsAsync()
             if (status === Contacts.PermissionStatus.GRANTED){
                 const { data } = await Contacts.getContactsAsync()
-                console.log(data)
+                const list = data.map((contact) => ({
+                    id: contact.id ?? useId(),
+                    name: contact.name,
+                    image: contact.image,
+                })).reduce<SectionListDataProps[]>((acc: any, item) => {
+                    const firstLetter = item.name[0].toUpperCase()
+                    const existingEntry = acc.find((entry: SectionListDataProps) =>
+                    (entry.title === firstLetter))
+
+                    if(existingEntry){
+                        existingEntry.data.push(item)
+                    }else{
+                        acc.push({title: firstLetter, data: [item]})
+                    }
+
+                    return acc
+                },[])
+                setContacts(list)
             }
         } catch(error){
             console.log(error)
@@ -47,11 +64,7 @@ useEffect(() => {
                 sections={[{title: "R", data: [{id: "1", name: "Heloísa"}] }]}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <Contact contact={{
-                        name: item.name,
-                        image: require("@/assets/avatar.jpeg")
-                        }} 
-                    />  
+                    <Contact contact={item} />  
                 )}
 
                 renderSectionHeader = {({ section }) => 
