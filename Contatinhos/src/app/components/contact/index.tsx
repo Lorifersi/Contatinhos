@@ -1,4 +1,4 @@
-import { ImageProps, Text, TouchableOpacity, TouchableOpacityProps } from "react-native"
+import { Alert, ImageProps, Text, TouchableOpacity, TouchableOpacityProps } from "react-native"
 import { styles } from './styles'
 import { Avatar } from "../avatar"
 
